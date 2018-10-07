@@ -3,7 +3,13 @@
   "collaborators": [
     "Pascal Brandt <psbrandt@gmail.com>"
   ],
+  "description": "Rust WebAssembly Tutorial",
   "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psbrandt/wasm-game-of-life"
+  },
   "files": [
     "wasm_game_of_life_bg.wasm",
     "wasm_game_of_life.js",

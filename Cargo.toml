@@ -2,12 +2,16 @@
 name = "wasm-game-of-life"
 version = "0.1.0"
 authors = ["Pascal Brandt <psbrandt@gmail.com>"]
+description = "Rust WebAssembly Tutorial"
+repository = "https://github.com/psbrandt/wasm-game-of-life"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib"]
 
 [features]
 default-features = ["console_error_panic_hook", "wee_alloc"]
+# default-features = ["wee_alloc"]
 
 [profile.release]
 debug = true
