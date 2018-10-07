@@ -19,6 +19,12 @@ macro_rules! log {
 }
 
 #[wasm_bindgen]
+extern "C" {
+  #[wasm_bindgen(js_namespace = performance)]
+  fn now() -> f64;
+}
+
+#[wasm_bindgen]
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Cell {
