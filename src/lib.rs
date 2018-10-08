@@ -74,10 +74,6 @@ pub struct Universe {
   cells: Vec<Cell>,
 }
 
-fn m(x: &i32, n: &i32) -> u32 {
-  ((x % n + n) % n) as u32
-}
-
 impl Universe {
   fn get_index(&self, row: u32, column: u32) -> usize {
     (row * self.width + column) as usize
@@ -86,10 +82,21 @@ impl Universe {
   fn live_neighbor_count(&self, row: u32, column: u32) -> u8 {
     let mut count = 0;
 
-    let top_row = m(&(row as i32 - 1), &(self.height as i32));
-    let bottom_row = m(&(row as i32 + 1), &(self.height as i32));
-    let right_col = m(&(column as i32 + 1), &(self.width as i32));
-    let left_col = m(&(column as i32 - 1), &(self.width as i32));
+    let top_row = if row == 0 { self.height - 1 } else { row - 1 };
+
+    let bottom_row = if row == self.height - 1 { 0 } else { row + 1 };
+
+    let right_col = if column == self.width - 1 {
+      0
+    } else {
+      column + 1
+    };
+
+    let left_col = if column == 0 {
+      self.width - 1
+    } else {
+      column - 1
+    };
 
     // top
     count += self.cells[self.get_index(top_row, column)] as u8;
@@ -161,8 +168,6 @@ impl Universe {
     let height = 128;
 
     log!("Initializing universe");
-
-    // panic!("Ayyyy");
 
     let cells = (0..width * height)
       .map(|i| {
