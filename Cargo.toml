@@ -10,10 +10,12 @@ license = "MIT"
 crate-type = ["cdylib"]
 
 [features]
-default-features = ["console_error_panic_hook", "wee_alloc"]
+default = ["console_error_panic_hook", "wee_alloc"]
 
 [profile.release]
-debug = true
+debug = false
+lto = true
+opt-level = 's'
 
 [dependencies]
 cfg-if = "0.1.2"

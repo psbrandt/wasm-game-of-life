@@ -41,8 +41,15 @@ function getUint32Memory() {
     return cachegetUint32Memory;
 }
 
-function _assertNum(n) {
-    if (typeof(n) !== 'number') throw new Error('expected a number argument');
+const __wbg_error_cc95a3d302735ca3_target = console.error;
+
+export function __wbg_error_cc95a3d302735ca3(arg0, arg1) {
+    let varg0 = getStringFromWasm(arg0, arg1);
+    
+    varg0 = varg0.slice();
+    wasm.__wbindgen_free(arg0, arg1 * 1);
+    
+    __wbg_error_cc95a3d302735ca3_target(varg0);
 }
 
 const __wbg_random_91b6ba2fda260d29_target = Math.random.bind(Math) || function() {
@@ -51,12 +58,6 @@ const __wbg_random_91b6ba2fda260d29_target = Math.random.bind(Math) || function(
 
 export function __wbg_random_91b6ba2fda260d29() {
     return __wbg_random_91b6ba2fda260d29_target();
-}
-
-class ConstructorToken {
-    constructor(ptr) {
-        this.ptr = ptr;
-    }
 }
 
 function freeUniverse(ptr) {
@@ -68,16 +69,14 @@ function freeUniverse(ptr) {
 export class Universe {
     
     static __construct(ptr) {
-        return new Universe(new ConstructorToken(ptr));
+        return new Universe(ptr);
     }
     
-    constructor(...args) {
-        if (args.length === 1 && args[0] instanceof ConstructorToken) {
-            this.ptr = args[0].ptr;
-            return;
-        }
-        throw new Error('you cannot invoke `new` directly without having a method annotated a constructor');
+    constructor(ptr) {
+        this.ptr = ptr;
+        
     }
+    
     free() {
         const ptr = this.ptr;
         this.ptr = 0;
@@ -152,8 +151,6 @@ export class Universe {
         if (this.ptr === 0) {
             throw new Error('Attempt to use a moved value');
         }
-        _assertNum(arg0);
-        _assertNum(arg1);
         return wasm.universe_toggle_cell(this.ptr, arg0, arg1);
     }
 }
