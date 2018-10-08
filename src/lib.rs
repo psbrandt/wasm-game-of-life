@@ -25,6 +25,32 @@ extern "C" {
 }
 
 #[wasm_bindgen]
+extern "C" {
+  #[wasm_bindgen(js_namespace = console)]
+  fn time(name: &str);
+
+  #[wasm_bindgen(js_namespace = console)]
+  fn timeEnd(name: &str);
+}
+
+pub struct Timer<'a> {
+  name: &'a str,
+}
+
+impl<'a> Timer<'a> {
+  pub fn new(name: &'a str) -> Timer<'a> {
+    time(name);
+    Timer { name }
+  }
+}
+
+impl<'a> Drop for Timer<'a> {
+  fn drop(&mut self) {
+    timeEnd(self.name);
+  }
+}
+
+#[wasm_bindgen]
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Cell {
@@ -48,6 +74,10 @@ pub struct Universe {
   cells: Vec<Cell>,
 }
 
+fn m(x: &i32, n: &i32) -> u32 {
+  ((x % n + n) % n) as u32
+}
+
 impl Universe {
   fn get_index(&self, row: u32, column: u32) -> usize {
     (row * self.width + column) as usize
@@ -55,18 +85,29 @@ impl Universe {
 
   fn live_neighbor_count(&self, row: u32, column: u32) -> u8 {
     let mut count = 0;
-    for delta_row in [self.height - 1, 0, 1].iter().cloned() {
-      for delta_col in [self.width - 1, 0, 1].iter().cloned() {
-        if delta_row == 0 && delta_col == 0 {
-          continue;
-        }
 
-        let neighbor_row = (row + delta_row) % self.height;
-        let neighbor_col = (column + delta_col) % self.width;
-        let idx = self.get_index(neighbor_row, neighbor_col);
-        count += self.cells[idx] as u8;
-      }
-    }
+    let top_row = m(&(row as i32 - 1), &(self.height as i32));
+    let bottom_row = m(&(row as i32 + 1), &(self.height as i32));
+    let right_col = m(&(column as i32 + 1), &(self.width as i32));
+    let left_col = m(&(column as i32 - 1), &(self.width as i32));
+
+    // top
+    count += self.cells[self.get_index(top_row, column)] as u8;
+    // top right
+    count += self.cells[self.get_index(top_row, right_col)] as u8;
+    // right
+    count += self.cells[self.get_index(row, right_col)] as u8;
+    // bottom right
+    count += self.cells[self.get_index(bottom_row, right_col)] as u8;
+    // bottom
+    count += self.cells[self.get_index(bottom_row, column)] as u8;
+    // bottom left
+    count += self.cells[self.get_index(bottom_row, left_col)] as u8;
+    // left
+    count += self.cells[self.get_index(row, left_col)] as u8;
+    // top left
+    count += self.cells[self.get_index(top_row, left_col)] as u8;
+
     count
   }
 }
@@ -88,6 +129,8 @@ impl fmt::Display for Universe {
 #[wasm_bindgen]
 impl Universe {
   pub fn tick(&mut self) {
+    // let _timer = Timer::new("Universe::tick");
+
     let mut next = self.cells.clone();
 
     for row in 0..self.height {
@@ -114,8 +157,8 @@ impl Universe {
   pub fn new() -> Universe {
     utils::set_panic_hook();
 
-    let width = 64;
-    let height = 64;
+    let width = 128;
+    let height = 128;
 
     log!("Initializing universe");
 

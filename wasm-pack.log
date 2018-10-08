@@ -103,3 +103,40 @@ error: Could not compile `wasm-game-of-life`.
 
 To learn more, run the command again with --verbose.
 
+Oct 07 18:18:27.761 ERRO Compilation of your program failed. stderr:
+
+   Compiling wasm-game-of-life v0.1.0 (/Users/psbrandt/workspace/wasm-tutorial/wasm-game-of-life)
+error[E0308]: mismatched types
+  --> src/lib.rs:92:20
+   |
+92 |     let abc: i32 = row - 1;
+   |                    ^^^^^^^ expected i32, found u32
+
+error: aborting due to previous error
+
+For more information about this error, try `rustc --explain E0308`.
+error: Could not compile `wasm-game-of-life`.
+
+To learn more, run the command again with --verbose.
+
+Oct 07 18:20:20.366 ERRO Compilation of your program failed. stderr:
+
+   Compiling wasm-game-of-life v0.1.0 (/Users/psbrandt/workspace/wasm-tutorial/wasm-game-of-life)
+error[E0308]: mismatched types
+  --> src/lib.rs:78:3
+   |
+77 | fn m(x: &i32, n: &i32) -> u32 {
+   |                           --- expected `u32` because of return type
+78 |   (x % n + n) % n
+   |   ^^^^^^^^^^^^^^^ expected u32, found i32
+   |
+   = note: expected type `u32`
+              found type `i32`
+
+error: aborting due to previous error
+
+For more information about this error, try `rustc --explain E0308`.
+error: Could not compile `wasm-game-of-life`.
+
+To learn more, run the command again with --verbose.
+
